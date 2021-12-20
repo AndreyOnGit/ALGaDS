@@ -13,20 +13,23 @@ package gb;
  * 2(дополнительно). Оптимизировать сортировку выбором, добавив поиск по максимального значения
  */
 
+import java.util.Arrays;
+
 public class Main {
     public static void main(String[] args) {
         ArrayBuilder arrayBuilder = new ArrayBuilder();
-        Notebook[] notebooks = arrayBuilder.buildArrays(50);
+//        Notebook[] notebooks = arrayBuilder.buildArrays(50);
 
-        arrayBuilder.printArrays(notebooks);
+//        arrayBuilder.printArrays(notebooks);
 
-        System.out.println("After sorted:");
+//        System.out.println("After sorted:");
 //        arrayBuilder.sort(notebooks);
 //        arrayBuilder.selectionSort(notebooks);
-        arrayBuilder.optimizedSelectionSort(notebooks);
-        arrayBuilder.printArrays(notebooks);
+//        arrayBuilder.optimizedSelectionSort(notebooks);
+//        arrayBuilder.printArrays(notebooks);
 
-
+        int[] ints = arrayBuilder.buildIntArrays(10000000);
+        System.out.println("The lost int = " + arrayBuilder.getLostInt(ints));
     }
 
 }
