@@ -10,10 +10,12 @@ public class TreeImpl<E extends Comparable<? super E>> implements Tree<E> {
     private class NodeAndParent {
         private Node<E> current;
         private Node<E> parent;
+        private int level;
 
-        public NodeAndParent(Node<E> current, Node<E> parent) {
+        public NodeAndParent(Node<E> current, Node<E> parent, int level) {
             this.current = current;
             this.parent = parent;
+            this.level = level;
         }
     }
 
@@ -30,7 +32,7 @@ public class TreeImpl<E extends Comparable<? super E>> implements Tree<E> {
 
         while (current != null) {
             if (current.getValue().equals(value)) {
-                return new NodeAndParent(current, parent);
+                return new NodeAndParent(current, parent, level);
             }
 
             parent = current;
@@ -40,9 +42,10 @@ public class TreeImpl<E extends Comparable<? super E>> implements Tree<E> {
             } else {
                 current = parent.getRightChild();
             }
+            level++;
         }
 
-        return new NodeAndParent(null, parent);
+        return new NodeAndParent(null, parent, level);
     }
 
     @Override
@@ -51,6 +54,12 @@ public class TreeImpl<E extends Comparable<? super E>> implements Tree<E> {
 
         if (nodeAndParent.current != null) {
             //nodeAndParent.current.incRepeat();
+            return false;
+        }
+
+        /* ограничение уровней */
+        if (nodeAndParent.level > 4) {
+//            System.out.println("add int " + value + " in level " + nodeAndParent.level);
             return false;
         }
 
@@ -103,12 +112,12 @@ public class TreeImpl<E extends Comparable<? super E>> implements Tree<E> {
 
     private void removeNodeWithOneChild(Node<E> removed, Node<E> parent) {
         Node<E> child = removed.getLeftChild() != null
-                        ? removed.getLeftChild()
-                        : removed.getRightChild();
+                ? removed.getLeftChild()
+                : removed.getRightChild();
 
         if (removed == root) {
             root = child;
-        } else if(parent.isLeftChild(removed.getValue())) {
+        } else if (parent.isLeftChild(removed.getValue())) {
             parent.setLeftChild(child);
         } else parent.setRightChild(child);
     }
@@ -154,7 +163,6 @@ public class TreeImpl<E extends Comparable<? super E>> implements Tree<E> {
     public int size() {
         return size;
     }
-
 
 
     public void display() {
@@ -206,11 +214,11 @@ public class TreeImpl<E extends Comparable<? super E>> implements Tree<E> {
     @Override
     public void traverse(TraversMode mode) {
         /** для Java 14
-        switch (mode) {
-            case PRE_ORDER -> preOrder(root); //прямой обход
-            case IN_ORDER -> inOrder(root); //центрированный обход
-            case POST_ORDER -> postOrder(root); //обратный порядок
-        }
+         switch (mode) {
+         case PRE_ORDER -> preOrder(root); //прямой обход
+         case IN_ORDER -> inOrder(root); //центрированный обход
+         case POST_ORDER -> postOrder(root); //обратный порядок
+         }
          */
         switch (mode) {
             case PRE_ORDER:
@@ -224,7 +232,7 @@ public class TreeImpl<E extends Comparable<? super E>> implements Tree<E> {
                 break;
         }
 
-       System.out.println();
+        System.out.println();
     }
 
     private void preOrder(Node<E> current) {
@@ -255,5 +263,9 @@ public class TreeImpl<E extends Comparable<? super E>> implements Tree<E> {
         postOrder(current.getLeftChild());
         postOrder(current.getRightChild());
         System.out.print(current.getValue() + " ");
+    }
+
+    public Node<E> getRoot() {
+        return root;
     }
 }
